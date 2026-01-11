@@ -9,12 +9,15 @@ def load_data(filepath: str) -> dict:
 
 
 def build_matrix_table(data: dict) -> str:
-    # Get sorted list of teams for consistent ordering
-    teams = sorted(data.keys())
+    # Get sorted list of teams from both outer keys and all inner opponent keys
+    teams = set(data.keys())
+    for team_data in data.values():
+        teams.update(team_data.keys())
+    teams = sorted(teams)
 
-    # Calculate column width (max of team name length and W-L format like "100-62")
+    # Calculate column width
     col_width = max(len(team) for team in teams)
-    col_width = max(col_width, 5)  # Minimum width of 5 for W-L format
+    col_width = max(col_width, 7) 
 
     # Build the table
     lines = []
@@ -33,7 +36,6 @@ def build_matrix_table(data: dict) -> str:
             if row_team == col_team:
                 cell = "--"
             else:
-                # Safe access with .get() to handle missing data
                 matchup = data.get(row_team, {}).get(col_team, {})
                 wins = matchup.get('W')
                 losses = matchup.get('L')
@@ -62,9 +64,6 @@ def main():
         sys.exit(1)
     except json.JSONDecodeError:
         print(f"Error: Invalid JSON in '{filepath}'.")
-        sys.exit(1)
-    except KeyError as e:
-        print(f"Error: Missing expected data key: {e}")
         sys.exit(1)
 
 
