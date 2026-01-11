@@ -17,7 +17,7 @@ def build_matrix_table(data: dict) -> str:
 
     # Calculate column width based on actual cell content
     col_width = max(len(team) for team in teams)
-    col_width = max(col_width, 2)  # Minimum for "--"
+    col_width = max(col_width, 2)  
 
     # Scan all matchups to find the longest W-L string
     for row_team in teams:
