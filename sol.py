@@ -29,8 +29,6 @@ def build_matrix_table(data: dict) -> str:
                 if wins is not None and losses is not None:
                     cell_len = len(f"{wins}-{losses}")
                     col_width = max(col_width, cell_len)
-                else:
-                    col_width = max(col_width, 2)  # "NA" length
 
     # Build the table
     lines = []
