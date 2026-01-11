@@ -11,15 +11,15 @@ def load_data(filepath: str) -> dict:
 def build_matrix_table(data: dict) -> str:
     # Get sorted list of teams for consistent ordering
     teams = sorted(data.keys())
-    
-    # Calculate column width (max of team name length and typical win values)
+
+    # Calculate column width (max of team name length and W-L format like "100-62")
     col_width = max(len(team) for team in teams)
-    col_width = max(col_width, 3)  
-    
+    col_width = max(col_width, 5)  # Minimum width of 5 for W-L format
+
     # Build the table
     lines = []
     separator = '-' * ((col_width + 1) * (len(teams) + 1) + 1)
-    
+
     header = f"{'Tm':<{col_width}}"
     for team in teams:
         header += f" {team:>{col_width}}"
@@ -33,16 +33,20 @@ def build_matrix_table(data: dict) -> str:
             if row_team == col_team:
                 cell = "--"
             else:
-                wins = data[row_team][col_team]['W']
-                cell = str(wins)
+                # Safe access with .get() to handle missing data
+                matchup = data.get(row_team, {}).get(col_team, {})
+                wins = matchup.get('W')
+                losses = matchup.get('L')
+
+                if wins is None or losses is None:
+                    cell = "NA"
+                else:
+                    cell = f"{wins}-{losses}"
             row += f" {cell:>{col_width}}"
         lines.append(row)
-    
+
     lines.append(separator)
-    
-    lines.append(header)
-    lines.append(separator)
-    
+
     return '\n'.join(lines)
 
 

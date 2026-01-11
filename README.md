@@ -15,7 +15,7 @@ The solution uses a straightforward approach:
 1. **Load Data**: Read the JSON file containing team records
 2. **Extract Teams**: Get a sorted list of all team names from the dictionary keys
 3. **Build Matrix**: Iterate through each team pair (row × column) to construct the table
-4. **Format Output**: Display wins for each matchup, with "--" for self-matchups
+4. **Format Output**: Display W-L records for each matchup, with "--" for self-matchups
 
 ### Key Data Structures
 
@@ -34,7 +34,9 @@ for each row_team in teams:
         if row_team == col_team:
             display "--"
         else:
-            display data[row_team][col_team]['W']
+            W = data[row_team][col_team]['W']
+            L = data[row_team][col_team]['L']
+            display "W-L"
 ```
 
 Time Complexity: O(n²) where n = number of teams
@@ -53,20 +55,18 @@ python sol.py your_data.json
 ## Example Output
 
 ```
----------------------------------
-Tm   BRO BSN CHC CIN NYG PHI PIT STL
----------------------------------
-BRO   --  10  15  15  14  14  15  11
-BSN   12  --  13  13  13  14  12   9
-CHC    7   9  --  12   7  16   8  10
-CIN    7   9  10  --  13  13  13   8
-NYG    8   9  15   9  --  12  15  13
-PHI    8   8   6   9  10  --  13   8
-PIT    7  10  14   9   7   9  --   6
-STL   11  13  12  14   9  14  16  --
----------------------------------
-Tm   BRO BSN CHC CIN NYG PHI PIT STL
----------------------------------
+-------------------------------------------------------
+Tm      BRO   BSN   CHC   CIN   NYG   PHI   PIT   STL
+-------------------------------------------------------
+BRO      -- 10-12  15-7  15-7  14-8  14-8  15-7 11-11
+BSN   12-10    --  13-9  13-9  13-9  14-8 12-10  9-13
+CHC    7-15  9-13    -- 12-10  7-15  16-6  8-14 10-12
+CIN    7-15  9-13 10-12    --  13-9  13-9  13-9  8-14
+NYG    8-14  9-13  15-7  9-13    -- 12-10  15-7  13-9
+PHI    8-14  8-14  6-16  9-13 10-12    --  13-9  8-14
+PIT    7-15 10-12  14-8  9-13  7-15  9-13    --  6-16
+STL   11-11  13-9 12-10  14-8  9-13  14-8  16-6    --
+-------------------------------------------------------
 ```
 
 ## JSON Data Format
