@@ -15,9 +15,22 @@ def build_matrix_table(data: dict) -> str:
         teams.update(team_data.keys())
     teams = sorted(teams)
 
-    # Calculate column width
+    # Calculate column width based on actual cell content
     col_width = max(len(team) for team in teams)
-    col_width = max(col_width, 7) 
+    col_width = max(col_width, 2)  # Minimum for "--"
+
+    # Scan all matchups to find the longest W-L string
+    for row_team in teams:
+        for col_team in teams:
+            if row_team != col_team:
+                matchup = data.get(row_team, {}).get(col_team, {})
+                wins = matchup.get('W')
+                losses = matchup.get('L')
+                if wins is not None and losses is not None:
+                    cell_len = len(f"{wins}-{losses}")
+                    col_width = max(col_width, cell_len)
+                else:
+                    col_width = max(col_width, 2)  # "NA" length
 
     # Build the table
     lines = []
